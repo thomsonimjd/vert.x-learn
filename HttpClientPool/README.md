@@ -1,11 +1,22 @@
-# My First Vert.x 3 Application
+# Vertx HttpClient Pooling issue
 
-This project is a very simple Vert.x 3 application and contains some explaination on how this application is built 
-and tested.
+Vert.x has a problem managing the connection pool of httpClients, especially when the response hangs out. HttpClientPoolTest will give the result.
 
-## Building
 
-You build the project using:
+## Issue explanation
+
+Mock server reponds the client with the delay of 3 seconds.
+HttpClient having the below configuration.
+```
+IdleTimeout = 2 Secs
+MaxPoolSize = (2)
+MaxWaitQueueSize = (0)
+ConnectTimeout = 2 Sec
+```
+
+When 4 http calls made to the server first two request will get connection refuced error and next 2 will get the ConnectionPoolTooBusyException, because of the connection queue config
+ 
+
 
 ```
 mvn clean package
@@ -13,20 +24,4 @@ mvn clean package
 
 ## Testing
 
-The application is tested using [vertx-unit](http://vertx.io/docs/vertx-unit/java/).
-
-## Packaging
-
-The application is packaged as a _fat jar_, using the 
-[Maven Shade Plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
-
-## Running
-
-Once packaged, just launch the _fat jar_ as follows:
-
-```
-java -jar target/my-first-app-1.0-SNAPSHOT-fat.jar
-```
-
-Then, open a browser to http://localhost:8080.
-
+Run the unit test HttpClientPoolTest.
