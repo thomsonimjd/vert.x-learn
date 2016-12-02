@@ -1,29 +1,32 @@
-# Vertx HttpClient Pooling issue
+# My First Vert.x 3 Application
 
-Vert.x Http connection pool has an issue, when connection timeout happens. 
-HttpClientPoolTest here reproduces the issue.
+This project is a very simple Vert.x 3 application and contains some explaination on how this application is built 
+and tested.
 
+## Building
 
-## Issue Detail
-
-Mock server reponds the client with the delay of 3 seconds.
-HttpClient having the below configuration.
+You build the project using:
 
 ```
-IdleTimeout = 2 Secs
-MaxPoolSize = (2)
-MaxWaitQueueSize = (0)
-ConnectTimeout = 2 Sec
+mvn clean package
 ```
-
-When 4 http calls made to the server,  
-
-First two request will get connection closed as client timeout is lower than server latency. 
-2 seconds delay is provided for clients to close the connection to be closed and return to the pool 
-However upon request of 3rd httpclient from pool we encounter - Connection pool reached max wait queue size of 0 
-
-
 
 ## Testing
 
-Run the unit test HttpClientPoolTest.
+The application is tested using [vertx-unit](http://vertx.io/docs/vertx-unit/java/).
+
+## Packaging
+
+The application is packaged as a _fat jar_, using the 
+[Maven Shade Plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
+
+## Running
+
+Once packaged, just launch the _fat jar_ as follows:
+
+```
+java -jar target/my-first-app-1.0-SNAPSHOT-fat.jar
+```
+
+Then, open a browser to http://localhost:8080.
+
